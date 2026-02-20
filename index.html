@@ -587,21 +587,36 @@
             }
 
             // --- Fonction pour enregistrer le résultat final dans la Google Sheet ---
-            function recordFinalResult(name, module, percentage) {
-                const date = new Date().toLocaleDateString('fr-FR'); // Format DD/MM/YYYY
-                // Assuming google.script.run is available in Google Apps Script context
-                if (typeof google !== 'undefined' && google.script && google.script.run) {
-                    google.script.run.withSuccessHandler(() => {
-                        console.log("Résultat enregistré avec succès !");
-                    }).withFailureHandler(error => {
-                        console.error("Erreur lors de l'enregistrement du résultat :", error);
-                    }).recordResult(date, name, module, percentage);
-                } else {
-                    console.log("Contexte Google Apps Script non disponible. Résultat non enregistré.");
-                }
-            }
+function recordFinalResult(name, module, percentage) {
+    const date = new Date().toLocaleDateString('fr-FR');
+
+    fetch('/api/record', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ date, name, module, percentage })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Erreur réseau ou serveur');
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            console.log("Résultat enregistré avec succès !");
+        } else {
+            console.error("Échec de l'enregistrement :", data.error);
+        }
+    })
+    .catch(error => {
+        console.error("Erreur lors de l'enregistrement :", error);
+    });
+}
         });
     </script>
 
 </body>
+
 </html>
