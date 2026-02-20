@@ -599,24 +599,24 @@ function recordFinalResult(name, module, percentage) {
     })
     .then(response => {
         if (!response.ok) {
-            throw new Error('Erreur réseau ou serveur');
+            throw new Error(`Erreur HTTP ${response.status}`);
         }
         return response.json();
     })
     .then(data => {
         if (data.success) {
-            console.log("Résultat enregistré avec succès !");
+            console.log("Score enregistré avec succès !");
         } else {
-            console.error("Échec de l'enregistrement :", data.error);
+            console.error("Échec enregistrement :", data.error || "Réponse inattendue");
         }
     })
     .catch(error => {
-        console.error("Erreur lors de l'enregistrement :", error);
+        console.error("Erreur lors de l'appel API :", error.message);
     });
 }
-        });
     </script>
 
 </body>
 
 </html>
+
