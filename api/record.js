@@ -30,7 +30,7 @@ export default async function handler(req, res) {
 
     res.status(200).json({ success: true });
   } catch (error) {
-    console.error('Erreur Sheets:', error);
-    res.status(500).json({ error: 'Erreur lors de l’enregistrement' });
+    console.error('Erreur lors de l\'écriture dans Sheets:', error.message);
+    res.status(500).json({ error: 'Erreur serveur lors de l\'enregistrement' });
   }
 }
